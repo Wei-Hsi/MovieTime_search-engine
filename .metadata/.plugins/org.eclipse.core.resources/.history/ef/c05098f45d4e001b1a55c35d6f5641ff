@@ -1,0 +1,23 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>GoogleSearch</title>
+</head>
+<body>
+<div class="container" style="text-align: center">
+		<img src="MovieTime.png" width="900" height="506">
+	</div>
+	<div class="container" style="text-align: center">
+		<h4>Pick a movie  <i class='fas fa-fast-forward'> </i></h4>
+	</div>
+<form action='${requestUri}' method='get'>
+<div class="form-group">
+	      <input type="text" size="50px" id="movie" placeholder=" Enter movie" name="movie">
+	    </div>
+	    <br><button type="submit" class="btn btn-outline-primary badge-pill">Search</button>
+</form>
+</body>
+</html>

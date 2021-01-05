@@ -1,0 +1,8 @@
+INDEX VERSION 1.4+/Users/Hsuweic/Desktop/temp/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+2666193030.index
+296566835.index
+1797633605.index
+3432800821.index
+722180405.index
+2278399001.index
+110073393.index

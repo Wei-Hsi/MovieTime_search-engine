@@ -1,0 +1,45 @@
+package BeatGoogle_Team18;
+
+import java.io.IOException;
+import java.util.Scanner;
+
+public class Main {
+	
+	public static void main(String[] args) throws IOException {
+		
+		KeywordList lst = new KeywordList();
+		WebTree tree;
+		Scanner in = new Scanner(System.in);
+		
+		try {
+			System.out.print("Enter the query string: ");
+			String keyword = in.nextLine().replace(" ", "+");
+			
+			GoogleQuery movieTime = new GoogleQuery(keyword);
+			
+			for(String url : movieTime.query().keySet()) {
+				String title = movieTime.query().get(url);
+				WebPage rootPage = new WebPage(url, title);
+				tree = new WebTree(rootPage);
+				
+				WordCounter counter = new WordCounter(url);
+				counter.findWebChild();
+				for(int i=0; i<counter.urlList.size(); i++) {
+					for(int j=0; j<counter.nameList.size(); j++) {
+					tree.root.addChild(new WebNode(new WebPage(counter.urlList.get(i), counter.nameList.get(j))));
+					}
+				}
+				tree.setPostOrderScore(lst.getKeyword());
+			}
+			
+			System.out.println(movieTime.getRankResultList(keyword));
+	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			in.close();
+		}
+		
+	}
+}
