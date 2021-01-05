@@ -1,0 +1,22 @@
+package BeatGoogle_Team18;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+public class TagFinder {
+	private String content;
+
+	public TagFinder(Fetch fetch) {
+		/* Debug */
+//		System.out.println("> TagFinder(" + fetch + ")");
+		/* Debug */
+		this.content = fetch.getContent();
+	}
+
+	public Elements select(String tagQuery) {
+		Document document = Jsoup.parse(content);
+		Elements tags = document.select(tagQuery);
+		return tags;
+	}
+}

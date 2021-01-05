@@ -37,7 +37,7 @@ public class GoogleQuery {
 
 	public GoogleQuery(String searchKeyword) {
 		this.searchKeyword = searchKeyword;
-		this.times = 20;
+		this.times = 50;
 		this.url = "http://www.google.com/search?q=" + searchKeyword + "&oe=utf8&num=" + this.times;
 	}
 
@@ -88,27 +88,27 @@ public class GoogleQuery {
 	}
 	
 	
-	public Ranking getRankResultList(String key) throws IOException {
+//	public Ranking getRankResultList(String key) throws IOException {
 //		searchResult = new HashMap<String, String>();
-		GoogleQuery keyword = new GoogleQuery(key);
-		searchResult = keyword.query();
-
-		searchResultList = addNode();
-		rankResult = new Ranking(searchResultList);
-		
-		return rankResult;
-	}
-
-	public ArrayList<WebNode> addNode() throws IOException {
-
-		for (String url : searchResult.keySet()) {
-			if (searchResult.get(url).contains("http") || !url.contains("Facebook") || !url.contains("blog") || !url.contains("wikipedia")) {
-				
-				WebNode node = new WebNode(new WebPage(searchResult.get(url), url));
-				nodeList.add(node);
-			}
-		}
-		
-		return nodeList;
-	}
+//		GoogleQuery keyword = new GoogleQuery(key);
+//		searchResult = keyword.query();
+//
+//		searchResultList = addNode();
+//		rankResult = new Ranking(searchResultList);
+//		
+//		return rankResult;
+//	}
+//
+//	public ArrayList<WebNode> addNode() throws IOException {
+//
+//		for (String url : searchResult.keySet()) {
+//			if (searchResult.get(url).contains("http") || !url.contains("Facebook") || !url.contains("blog") || !url.contains("wikipedia")) {
+//				
+//				WebNode node = new WebNode(new WebPage(searchResult.get(url), url));
+//				nodeList.add(node);
+//			}
+//		}
+//		
+//		return nodeList;
+//	}
 }

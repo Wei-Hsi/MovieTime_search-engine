@@ -1,0 +1,82 @@
+
+import java.util.ArrayList;
+
+public class Ranking {
+
+//	public ArrayList<WebNode> nodeList = new ArrayList<WebNode>();
+
+//	public String[][] array;
+
+//	public Ranking(ArrayList<WebNode> nodeList) {
+//		this.nodeList = quickSort(nodeList, 0, nodeList.size() - 1);
+//	}
+
+	public Ranking(String[][] array) {
+		quickSort(array, 0, array.length - 1);
+	}
+
+	public static void quickSort(String[][] arr, int leftest, int rightest) {
+		if (leftest < rightest) {
+			String[] pivot = arr[rightest];
+			int i = leftest;
+			int j = rightest;
+			while (i < j) {
+				while (Double.parseDouble(arr[i][2]) < Double.parseDouble(pivot[2])) {
+					i++;
+				}
+				while (Double.parseDouble(arr[j][2]) >= Double.parseDouble(pivot[2])) {
+					if (--j < 0) {
+						j = leftest;
+						break;
+					}
+				}
+				if (i >= j) {
+					break;
+				}
+				String[] temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
+			String[] temp = arr[rightest];
+			arr[rightest] = arr[i];
+			arr[i] = temp;
+			quickSort(arr, leftest, i - 1);
+			quickSort(arr, i + 1, rightest);
+		}
+	}
+
+//	public ArrayList<WebNode> QuickSort(ArrayList<WebNode> nodeList, int leftest, int rightest) {
+//
+//		if (nodeList.size() < 2) {
+//			return nodeList;
+//		} else if (leftest < rightest) {
+//			WebNode pivotKey = nodeList.get(leftest);
+//			int i = leftest;
+//			int j = rightest;
+//
+//			do {
+//				do {
+//					i += 1;
+//				} while (!(nodeList.get(i).getNodeScore() > pivotKey.getNodeScore()) && i >= rightest);
+//
+//				do {
+//					j -= 1;
+//				} while (!(nodeList.get(j).getNodeScore() < pivotKey.getNodeScore()) && j >= leftest);
+//
+//				if (i < j) {
+//					WebNode temp = nodeList.get(i);
+//					nodeList.set(i, nodeList.get(j));
+//					nodeList.set(j, temp);
+//				}
+//			} while (!(i >= j));
+//			WebNode temp = nodeList.get(leftest);
+//			nodeList.set(leftest, nodeList.get(j));
+//			nodeList.set(j, temp);
+//
+//			QuickSort(nodeList, leftest, j - 1);
+//			QuickSort(nodeList, j + 1, rightest);
+//		}
+//		return nodeList;
+//	}
+
+}

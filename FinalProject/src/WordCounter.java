@@ -1,102 +1,29 @@
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public class WordCounter {
-	private String urlStr;
-    private String content;
-    private String contentURL;
-//	public ArrayList<String> urlList = new ArrayList<>();
-//	public ArrayList<String> nameList = new ArrayList<>();
-    
-    public WordCounter(String urlStr){
-    	this.urlStr = urlStr;
-    }
-    
-    private String fetchContent() throws IOException{
-		URL url = new URL(this.urlStr);
-		URLConnection conn = url.openConnection();
-		InputStream in = conn.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-	
-		String retVal = "";
-	
-		String line = null;
-		
-		while ((line = br.readLine()) != null){
-		    retVal = retVal + line + "\n";
-		}
-	
-		return retVal;
-    }
-    
-    public int countKeyword(String keyword) throws IOException{
-		if (content == null){
-		    content = fetchContent();
-		}
-		
-		//To do a case-insensitive search, we turn the whole content and keyword into upper-case:
+	private String content;
+
+	public WordCounter(Fetch fetch) {
+		this.content = fetch.getContent();
+	}
+
+	public WordCounter(String content) {
+		this.content = content;
+	}
+
+	public int countKeyword(String keyword) {
 		content = content.toUpperCase();
 		keyword = keyword.toUpperCase();
-	
+
 		int retVal = 0;
 		int fromIdx = 0;
 		int found = -1;
-	
-		while ((found = content.indexOf(keyword, fromIdx)) != -1){
-		    retVal++;
-		    fromIdx = found + keyword.length();
+
+		while ((found = content.indexOf(keyword, fromIdx)) != -1) {
+			retVal++;
+			fromIdx = found + keyword.length();
 		}
-	
+
 		return retVal;
-	}
-    public HashMap<String,String> findWebChild() throws IOException{
-		if(this.contentURL == null) {
-			this.contentURL = fetchContent();
-		}
-		HashMap<String, String> retVal = new HashMap<String, String>();
-		Document document = Jsoup.parse(contentURL);
-		String title = document.title();
-		Elements lis = document.select("a");
-		int count = 0;
-		
-		for(Element li : lis) {
-			try {
-				
-				String citeUrl = li.attr("href");
-				if(citeUrl.contains("\"")) {
-					citeUrl = citeUrl.substring(8, citeUrl.indexOf("\""));
-				}
-				else if(citeUrl.contains("'")) {
-					citeUrl = citeUrl.substring(8, citeUrl.indexOf("'"));
-				}
-				
-				if (!citeUrl.startsWith("https")) {
-			        continue;
-				}
-				retVal.put(citeUrl,title);
-			
-				count++;
-				if(count > 2) {
-					break;
-				}
-			}catch(Exception e) {
-				
-			}
-		}
-		 
-		return retVal;
-		
-		
 	}
 }
