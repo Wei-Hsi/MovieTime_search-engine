@@ -10,8 +10,8 @@ public class DomainList {
 	private ArrayList<String> domains = new ArrayList<String>();
 
 	public DomainList() {
-		for (Keyword k : new KeywordList().getKeyword()) {
-			HashMap<String, String> q = new GoogleQuery(k.name, 100).query();
+		for (Keyword k : new KeywordList().getList()) {
+			HashMap<String, String> q = new GoogleQuery(k.name, 10).query();
 			for (Entry<String, String> e : q.entrySet()) {
 				URL url;
 				try {
@@ -24,7 +24,7 @@ public class DomainList {
 		}
 	}
 
-	public ArrayList<String> getDomains() {
+	public ArrayList<String> getList() {
 		return this.domains;
 	}
 

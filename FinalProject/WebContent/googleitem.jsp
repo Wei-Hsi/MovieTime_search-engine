@@ -10,7 +10,7 @@
 	<%
 	String[][] orderList = (String[][]) request.getAttribute("query");
 	for (int i = 0; i < orderList.length; i++) {
-		if (orderList[i][0] == null && orderList[i][1] == null && orderList[i][2] == null) {
+		if (orderList[i][0] == null || orderList[i][1] == null || orderList[i][2] == null) {
 			continue;
 		}
 	%>

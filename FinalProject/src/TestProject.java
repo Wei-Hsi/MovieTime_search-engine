@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class TestProject
@@ -52,27 +53,28 @@ public class TestProject extends HttpServlet {
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
 		/* 繞開SSL驗證 */
 
+		HttpSession session = request.getSession();
+		session.setMaxInactiveInterval(-1);
+
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html");
 		if (request.getParameter("keyword") == null) {
 			String requestUri = request.getRequestURI();
 			request.setAttribute("requestUri", requestUri);
+//			request.getSession().setMaxInactiveInterval(-1);
+//			System.out.println(request.getAttribute(requestUri)));
 			request.getRequestDispatcher("Search.jsp").forward(request, response);
 			return;
 		}
 
-//		try {
-//			System.out.println(new Fetch("https://www.google.com/search?q=%E5%AD%A4%E5%91%B3&oe=utf8&num=100").getContent());
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//		System.out.println("request.getSession().invalidate();");
+//		request.getSession().invalidate();
 
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		HashMap<String, String> query = google.query();
-
 		DomainList domainList = new DomainList();
+		KeywordList keywordList = new KeywordList();
 
 		String[][] s = new String[query.size()][3];
 		request.setAttribute("query", s);
@@ -81,57 +83,29 @@ public class TestProject extends HttpServlet {
 			String title = entry.getKey();
 			String url = entry.getValue();
 
-			if (!domainList.getDomains().contains(new URL(url).getHost())) {
-				continue;
-			}
-
 			s[num][0] = title;
 			s[num][1] = url;
+
+			if (!domainList.getList().contains(new URL(url).getHost())) {
+				s[num][2] = String.valueOf(-10.0);
+				num++;
+				continue;
+			}
 
 			WebPage rootPage = new WebPage(url, title);
 			WebTree tree = new WebTree(rootPage);
 
 			try {
-				rootPage.toFetch();
-//				rootPage.getFetch().start();
-//				try {
-//					rootPage.getFetch().join();
-//				} catch (InterruptedException e) {
-//
-//					System.err.println("InterruptedException: " + e.getMessage());
-//				}
+//				rootPage.toFetch();
 				tree.root.toSubPage();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
 //				s[num][2] = String.valueOf(0.0);
 //				continue;
 			}
-			tree.setPostOrderScore(new KeywordList().getKeyword());
+			tree.setPostOrderScore(keywordList.getList());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
-
 //			s[num][2] = String.valueOf(Math.random() * 100);
-
-//		    nodeList.add(tree.root);
-//		    nodeList = new Ranking(nodeList).nodeList;
-			/*
-			 * 
-			 * 
-			 * WordCounter counter = new WordCounter(url); // counter.findWebChild();
-			 * 
-			 * for(Entry<String, String> child : counter.findWebChild().entrySet()) { String
-			 * childTitle = child.getKey(); String childUrl = child.getValue();
-			 * tree.root.addChild(new WebNode(new WebPage(childUrl,childTitle))); }
-			 * tree.setPostOrderScore(lst.getKeyword()); nodeList.add(tree.root);
-			 * 
-			 */
-
-//			for(int i=0; i<counter.findWebChild().size(); i++) {
-//				tree.root.addChild(new WebNode(new WebPage(counter.urlList.get(i), counter.nameList.get(i))));
-//			}
-
-			// use word counter
-//		    WordCounter counter = new WordCounter(url);
-//		    s[num][2] = counter.countKeyword(url);
 			num++;
 		}
 		Ranking.rank(s);

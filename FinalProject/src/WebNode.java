@@ -22,7 +22,7 @@ public class WebNode {
 	public void setNodeScore(ArrayList<Keyword> keywords) throws IOException {
 		System.out.println("setNodeScore");
 		this.nodeScore = 0;
-		webPage.setScore(keywords); //Mutli Thread
+		webPage.setScore(keywords); // Mutli Thread
 		nodeScore = webPage.score;
 		for (WebNode child : children) {
 			nodeScore += child.nodeScore;
@@ -52,23 +52,19 @@ public class WebNode {
 		/* Debug */
 		webPage.toFetch();
 		System.out.print(webPage.getFetch());
-		
-		
-		//debug
-//		double i = 0;
-		//debug
 
-		
+		// debug
+		double i = 0;
+		// debug
+
 		for (Element tag : webPage.getFetch().select("a")) {
-			
-			
-			//debug
-//			if ((i = i + Math.random() * 10) > 100) {
-//				return;
-//			}
-			//debug
 
-			
+			// debug
+			if (i++ > 5) {
+				return;
+			}
+			// debug
+
 			String href = tag.attr("href"); // 有待整理
 //			System.out.println(href);
 //			System.out.println();
@@ -133,4 +129,8 @@ public class WebNode {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "WebPage[" + this.webPage.name + "]";
+	}
 }

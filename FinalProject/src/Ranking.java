@@ -7,15 +7,15 @@ public class Ranking {
 	}
 
 	public static void rank(String[][] array) {
-		ArrayList<String[]> l = new ArrayList<String[]>();
-		for (int i = 0; i < array.length; i++) {
-			if (array[i][0] != null && array[i][1] != null && array[i][2] != null) {
-				l.add(array[i]);
-			}
-			System.out.println(array[i][0] + "," + array[i][1] + "," + array[i][2]);
+//		ArrayList<String[]> l = new ArrayList<String[]>();
+//		for (int i = 0; i < array.length; i++) {
+//			if (array[i][0] != null && array[i][1] != null && array[i][2] != null) {
+//				l.add(array[i]);
+//			}
+//			System.out.println(array[i][0] + "," + array[i][1] + "," + array[i][2]);
 
-		}
-		array = l.toArray(new String[l.size()][3]);
+//		}
+//		array = l.toArray(new String[l.size()][3]);
 		quickSort(array, 0, array.length - 1);
 	}
 
