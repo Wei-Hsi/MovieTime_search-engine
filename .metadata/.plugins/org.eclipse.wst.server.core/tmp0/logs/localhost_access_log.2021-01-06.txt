@@ -1,0 +1,4 @@
+127.0.0.1 - - [06/Jan/2021:15:15:54 +0800] "GET / HTTP/1.1" 404 751
+0:0:0:0:0:0:0:1 - - [06/Jan/2021:15:15:55 +0800] "GET /FinalProject/TestProject HTTP/1.1" 200 1104
+0:0:0:0:0:0:0:1 - - [06/Jan/2021:15:15:55 +0800] "GET /FinalProject/MovieTime.png HTTP/1.1" 304 -
+0:0:0:0:0:0:0:1 - - [06/Jan/2021:15:16:11 +0800] "GET /FinalProject/TestProject?keyword=%E7%A5%9E%E5%8A%9B%E5%A5%B3%E8%B6%85%E4%BA%BA HTTP/1.1" 200 25289

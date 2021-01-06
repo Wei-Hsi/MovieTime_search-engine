@@ -12,8 +12,8 @@ public class KeywordList {
 		lst.add(new Keyword("訂票", 30));
 		lst.add(new Keyword("主演", 1));
 		lst.add(new Keyword("數位", 30));
-		lst.add(new Keyword("2D", 10));
-		lst.add(new Keyword("3D", 10));
+		lst.add(new Keyword("2D", 5));
+		lst.add(new Keyword("3D", 5));
 		lst.add(new Keyword("現正熱映", 3));
 	}
 	public ArrayList<Keyword> getKeyword(){
