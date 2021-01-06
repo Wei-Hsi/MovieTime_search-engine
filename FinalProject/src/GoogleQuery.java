@@ -1,83 +1,46 @@
-import java.io.BufferedReader;
-
-import java.io.IOException;
-
-import java.io.InputStream;
-
-import java.io.InputStreamReader;
-
-import java.net.URL;
-
-import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
-
-
-
-import org.jsoup.Jsoup;
-
-import org.jsoup.nodes.Document;
-
 import org.jsoup.nodes.Element;
-
 import org.jsoup.select.Elements;
-
-
 
 public class GoogleQuery {
 	public String searchKeyword;
 	public String url;
 	public String content;
 	public HashMap<String, String> searchResult;
-	public Ranking rankResult;
-	public ArrayList<WebNode> searchResultList;
-	public ArrayList<WebNode> nodeList;
-	
-	public int times;
+	public int num;
+	private WebPage queryPage;
+
+	public GoogleQuery(String searchKeyword, int num) {
+		/* Debug */
+		System.out.println("> GoogleQuery(" + searchKeyword + ", " + num + ")");
+		/* Debug */
+		this.searchKeyword = searchKeyword;
+		this.num = num;
+		this.url = "http://www.google.com/search?q=" + searchKeyword.replace(" ", "+") + "&oe=utf8&num=" + this.num;
+		queryPage = new WebPage(this.url, this.searchKeyword);
+	}
 
 	public GoogleQuery(String searchKeyword) {
-		this.searchKeyword = searchKeyword;
-		this.times = 50;
-		this.url = "http://www.google.com/search?q=" + searchKeyword + "&oe=utf8&num=" + this.times;
+		this(searchKeyword, 100);
 	}
 
-	public GoogleQuery(String searchKeyword, int times) {
-		this.searchKeyword = searchKeyword;
-		this.times = times;
-		this.url = "http://www.google.com/search?q=" + searchKeyword + "&oe=utf8&num=" + this.times;
-	}
-
-	private String fetchContent() throws IOException {
-		String retVal = "";
-		URL u = new URL(url);
-		URLConnection conn = u.openConnection();
-		conn.setRequestProperty("User-agent", "Chrome/7.0.517.44");
-		InputStream in = conn.getInputStream();
-		InputStreamReader inReader = new InputStreamReader(in, "utf-8");
-		BufferedReader bufReader = new BufferedReader(inReader);
-		String line = null;
-		while ((line = bufReader.readLine()) != null) {
-			retVal += line;
-		}
-		return retVal;
-	}
-
-	public HashMap<String, String> query() throws IOException {
-		if (content == null) {
-			content = fetchContent();
+	public HashMap<String, String> query() {
+		/* Debug */
+		System.out.println("> " + this + ".query()");
+		/* Debug */
+		try {
+			queryPage.toFetch();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 		HashMap<String, String> retVal = new HashMap<String, String>();
-		Document doc = Jsoup.parse(content);
-//		System.out.println(doc.text());
-		Elements lis = doc.select("div");
-		// System.out.println(lis);
-		lis = lis.select(".kCrYT");
-		// System.out.println(lis.size());
+		Elements lis = queryPage.getFetch().select("div").select(".kCrYT");
 		for (Element li : lis) {
 			try {
-				String citeUrl = li.select("a").get(0).attr("href");
+				String citeUrl = li.select("a").get(0).attr("href").replace("/url?q=", "");
 				String title = li.select("a").get(0).select(".vvjwJb").text();
-				System.out.println(title + "," + citeUrl);
+				System.out.println(title + ", " + citeUrl);
 				retVal.put(title, citeUrl);
 			} catch (IndexOutOfBoundsException e) {
 //              e.printStackTrace();
@@ -86,29 +49,4 @@ public class GoogleQuery {
 		this.searchResult = retVal;
 		return retVal;
 	}
-	
-	
-//	public Ranking getRankResultList(String key) throws IOException {
-//		searchResult = new HashMap<String, String>();
-//		GoogleQuery keyword = new GoogleQuery(key);
-//		searchResult = keyword.query();
-//
-//		searchResultList = addNode();
-//		rankResult = new Ranking(searchResultList);
-//		
-//		return rankResult;
-//	}
-//
-//	public ArrayList<WebNode> addNode() throws IOException {
-//
-//		for (String url : searchResult.keySet()) {
-//			if (searchResult.get(url).contains("http") || !url.contains("Facebook") || !url.contains("blog") || !url.contains("wikipedia")) {
-//				
-//				WebNode node = new WebNode(new WebPage(searchResult.get(url), url));
-//				nodeList.add(node);
-//			}
-//		}
-//		
-//		return nodeList;
-//	}
 }

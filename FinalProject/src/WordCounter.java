@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 
 public class WordCounter {
 	private String content;
@@ -11,9 +11,12 @@ public class WordCounter {
 		this.content = content;
 	}
 
-	public int countKeyword(String keyword) {
+	public int countKeyword(Keyword k) {
+		/* Debug */
+//		System.out.println("> WordCounter.countKeyword(" + keyword + ")");
+		/* Debug */
 		content = content.toUpperCase();
-		keyword = keyword.toUpperCase();
+		String keyword = k.name.toUpperCase();
 
 		int retVal = 0;
 		int fromIdx = 0;
@@ -24,6 +27,12 @@ public class WordCounter {
 			fromIdx = found + keyword.length();
 		}
 
+		System.out.print(" " + retVal);
+//		ArrayList<Keyword> keywords = new KeywordList().getKeyword();
+//		
+//		if (keywords.get(keywords.size() - 1).name.equals(k.name)) {
+//			System.out.println();
+//		}
 		return retVal;
 	}
 }

@@ -2,9 +2,9 @@
 
 public class Keyword {
 	public String name;
-	public float weight;
+	public double weight;
 
-	public Keyword(String name, float weight) {
+	public Keyword(String name, double weight) {
 		this.name = name;
 		this.weight = weight;
 	}
@@ -13,7 +13,7 @@ public class Keyword {
 		return name;
 	}
 
-	public float getWeight() {
+	public double getWeight() {
 		return weight;
 	}
 

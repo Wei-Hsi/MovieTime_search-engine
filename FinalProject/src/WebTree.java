@@ -1,5 +1,4 @@
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,9 +16,12 @@ public class WebTree {
 	private void setPostOrderScore(WebNode startNode, ArrayList<Keyword> keywords) throws IOException {
 		for (WebNode child : startNode.children) {
 			setPostOrderScore(child, keywords);
-			child.setNodeScore(keywords);
+			if (child.nodeScore == -1) {
+				child.setNodeScore(keywords);
+			}
 		}
-		startNode.setNodeScore(keywords);
-
+		if (startNode.nodeScore == -1) {
+			startNode.setNodeScore(keywords);
+		}
 	}
 }

@@ -1,11 +1,11 @@
-
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.security.cert.*;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
-import javax.servlet.ServletContext;
+import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,18 +17,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/TestProject")
 public class TestProject extends HttpServlet {
-
 	private static final long serialVersionUID = 1L;
+
 //	public KeywordList lst = new KeywordList();
 //	public ArrayList<WebNode> nodeList = new ArrayList<WebNode>();
 //	public Ranking rankResult;
-
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public TestProject() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -37,7 +35,22 @@ public class TestProject extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+
+		/* 繞開SSL驗證 */
+		try {
+			trustAllHttpsCertificates();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		HostnameVerifier hv = new HostnameVerifier() {
+			public boolean verify(String urlHostName, SSLSession session) {
+				return true;
+			}
+		};
+		HttpsURLConnection.setDefaultHostnameVerifier(hv);
+		/* 繞開SSL驗證 */
+
 		response.setCharacterEncoding("UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html");
@@ -47,22 +60,8 @@ public class TestProject extends HttpServlet {
 			request.getRequestDispatcher("Search.jsp").forward(request, response);
 			return;
 		}
-		KeywordList lst = new KeywordList();
-		lst.addKeyword();
-//		ArrayList<Keyword> lst = new ArrayList<Keyword>();
-//		lst.add(new Keyword("影城", 50));
-//		lst.add(new Keyword("上映日期", 3));
-//		lst.add(new Keyword("訂票", 30));
-//		lst.add(new Keyword("主演", 1));
-//		lst.add(new Keyword("數位", 30));
-//		lst.add(new Keyword("2D", 5));
-//		lst.add(new Keyword("3D", 5));
-//		lst.add(new Keyword("現正熱映", 3));
-//		ArrayList<WebNode> nodeList = new ArrayList<WebNode>();
-
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		HashMap<String, String> query = google.query();
-
 		String[][] s = new String[query.size()][3];
 		request.setAttribute("query", s);
 		int num = 0;
@@ -77,13 +76,19 @@ public class TestProject extends HttpServlet {
 
 			try {
 				rootPage.toFetch();
+//				rootPage.getFetch().start();
+//				try {
+//					rootPage.getFetch().join();
+//				} catch (InterruptedException e) {
+//					System.err.println("InterruptedException: " + e.getMessage());
+//				}
 				tree.root.toSubPage();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
-				s[num][2] = String.valueOf(0.0);
+//				s[num][2] = String.valueOf(0.0);
 //				continue;
 			}
-			tree.setPostOrderScore(lst.getKeyword());
+			tree.setPostOrderScore(new KeywordList().getKeyword());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
 
 //			s[num][2] = String.valueOf(Math.random() * 100);
@@ -111,11 +116,11 @@ public class TestProject extends HttpServlet {
 //		    s[num][2] = counter.countKeyword(url);
 			num++;
 		}
-		new Ranking(s);
+		Ranking.rank(s);
 		for (int i = 0; i < s.length; i++) {
 			System.out.println(s[i][0] + "," + s[i][1] + "," + s[i][2]);
 		}
-
+		System.out.println("will show the result...");
 		request.getRequestDispatcher("googleitem.jsp").forward(request, response);
 	}
 
@@ -128,5 +133,38 @@ public class TestProject extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+
+	/* 繞開SSL驗證 */
+	private static void trustAllHttpsCertificates() throws Exception {
+		TrustManager[] trustAllCerts = new TrustManager[1];
+		TrustManager tm = new miTM();
+		trustAllCerts[0] = tm;
+		SSLContext sc = SSLContext.getInstance("SSL");
+		sc.init(null, trustAllCerts, null);
+		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+	}
+
+	static class miTM implements TrustManager, X509TrustManager {
+		public X509Certificate[] getAcceptedIssuers() {
+			return null;
+		}
+
+		public boolean isServerTrusted(X509Certificate[] certs) {
+			return true;
+		}
+
+		public boolean isClientTrusted(X509Certificate[] certs) {
+			return true;
+		}
+
+		public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+			return;
+		}
+
+		public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+			return;
+		}
+	}
+	/* 繞開SSL驗證 */
 
 }

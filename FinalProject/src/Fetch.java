@@ -7,7 +7,7 @@ import java.net.URL;
 
 import org.jsoup.select.Elements;
 
-public class Fetch {
+public class Fetch/* extends Thread */ {
 	private String url;
 	private String content;
 	private URL urlObject;
@@ -18,13 +18,31 @@ public class Fetch {
 	private WordCounter wordCounter;
 	private TagFinder tagFinder;
 
+	public Fetch() {
+		this.content = "";
+	}
+
+	public Fetch setURL(String url) {
+		this.url = url;
+		return this;
+	}
+
+	public String getURL() {
+		return this.url;
+	}
+
 	public Fetch(String url) throws Exception {
 		/* Debug */
 //		System.out.println("> Fetch(" + url + ")");
 		/* Debug */
-		this.url = url;
 		this.content = "";
-		this.urlObject = new URL(this.url);
+		this.url = url;
+		try {
+			this.urlObject = new URL(this.url);
+		} catch (java.net.MalformedURLException e) {
+			System.err.println(e.getClass() + ": " + this.url);
+			return;
+		}
 		this.conn = (HttpURLConnection) urlObject.openConnection();
 		this.conn.setRequestProperty("User-agent", "Chrome/7.0.517.44");
 		this.statusCode = this.conn.getResponseCode();
@@ -43,8 +61,39 @@ public class Fetch {
 			retVal = retVal + line;
 		}
 		this.content = retVal;
-		System.out.println(this.content);
+//		System.out.println(this.content);
 	}
+
+//	public void connect() throws Exception {
+//		this.conn = (HttpURLConnection) urlObject.openConnection();
+//		this.conn.setRequestProperty("User-agent", "Chrome/7.0.517.44");
+//		this.statusCode = this.conn.getResponseCode();
+//		this.statusMessage = this.conn.getResponseMessage();
+//		if (this.statusCode / 100 > 2) {
+//			/* Debug */
+//			System.err.println(
+//					"> HTTPStatusException(" + this.url + ", " + this.statusCode + ", " + this.statusMessage + ")");
+//			/* Debug */
+//			throw new HTTPStatusException(this.statusCode, this.statusMessage);
+//		}
+//		BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+//		String retVal = "";
+//		String line = null;
+//		while ((line = br.readLine()) != null) {
+//			retVal = retVal + line;
+//		}
+//		this.content = retVal;
+//	}
+//
+//	public void run() {
+//		try {
+//			connect();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			System.err.println(e.getMessage());
+//			return;
+//		}
+//	}
 
 	public String getContent() {
 		/* Debug */
@@ -53,14 +102,14 @@ public class Fetch {
 		return content;
 	}
 
-	public int countKeyword(String keyword) {
+	public int countKeyword(Keyword k) {
 		/* Debug */
-		System.out.println("> " + this + ".countKeyword(" + keyword + ")");
+//		System.out.println("> " + this + ".countKeyword(" + keyword + ")");
 		/* Debug */
 		if (this.wordCounter == null) {
 			this.wordCounter = new WordCounter(this);
 		}
-		return this.wordCounter.countKeyword(keyword);
+		return this.wordCounter.countKeyword(k);
 	}
 
 	public Elements select(String tagQuery) {
