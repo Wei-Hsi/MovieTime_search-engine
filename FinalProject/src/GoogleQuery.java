@@ -49,4 +49,8 @@ public class GoogleQuery {
 		this.searchResult = retVal;
 		return retVal;
 	}
+
+	public String toString() {
+		return "GoogleQuery [" + this.searchKeyword + "]";
+	}
 }

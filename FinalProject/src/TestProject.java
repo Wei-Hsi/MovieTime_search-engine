@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.net.URL;
 import java.security.cert.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import javax.net.ssl.*;
@@ -62,18 +64,26 @@ public class TestProject extends HttpServlet {
 		}
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		HashMap<String, String> query = google.query();
+
+		DomainList domainList = new DomainList();
+
 		String[][] s = new String[query.size()][3];
 		request.setAttribute("query", s);
 		int num = 0;
 		for (Entry<String, String> entry : query.entrySet()) {
 			String title = entry.getKey();
 			String url = entry.getValue();
+
+			if (!domainList.getDomains().contains(new URL(url).getHost())) {
+				continue;
+			}
+
 			s[num][0] = title;
 			s[num][1] = url;
 
 			WebPage rootPage = new WebPage(url, title);
 			WebTree tree = new WebTree(rootPage);
-
+/*
 			try {
 				rootPage.toFetch();
 //				rootPage.getFetch().start();
@@ -90,8 +100,9 @@ public class TestProject extends HttpServlet {
 			}
 			tree.setPostOrderScore(new KeywordList().getKeyword());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
+*/
 
-//			s[num][2] = String.valueOf(Math.random() * 100);
+			s[num][2] = String.valueOf(Math.random() * 10000);
 
 //		    nodeList.add(tree.root);
 //		    nodeList = new Ranking(nodeList).nodeList;
