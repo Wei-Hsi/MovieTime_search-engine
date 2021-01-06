@@ -82,7 +82,6 @@ public class TestProject extends HttpServlet {
 			String url = entry.getValue();
 
 			if (!domainList.getDomains().contains(new URL(url).getHost())) {
-//				System.out.println("continue");
 				continue;
 			}
 
@@ -93,19 +92,24 @@ public class TestProject extends HttpServlet {
 			WebTree tree = new WebTree(rootPage);
 
 			try {
-				rootPage.toFetch(); // rootPage.getFetch().start(); // try {
-				// rootPage.getFetch().join(); // } catch (InterruptedException e) { //
-				// System.err.println("InterruptedException: " + e.getMessage()); // }
+				rootPage.toFetch();
+//				rootPage.getFetch().start();
+//				try {
+//					rootPage.getFetch().join();
+//				} catch (InterruptedException e) {
+//
+//					System.err.println("InterruptedException: " + e.getMessage());
+//				}
 				tree.root.toSubPage();
 			} catch (Exception e) {
-				System.err.println(e.getMessage()); // s[num][2] = String.valueOf(0.0); //
-				continue;
+				System.err.println(e.getMessage());
+//				s[num][2] = String.valueOf(0.0);
+//				continue;
 			}
 			tree.setPostOrderScore(new KeywordList().getKeyword());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
 
 //			s[num][2] = String.valueOf(Math.random() * 100);
-//			System.out.println(num + "," + s[num][0] + ", " + s[num][1] + ", " + s[num][2]);
 
 //		    nodeList.add(tree.root);
 //		    nodeList = new Ranking(nodeList).nodeList;

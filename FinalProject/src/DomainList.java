@@ -11,7 +11,7 @@ public class DomainList {
 
 	public DomainList() {
 		for (Keyword k : new KeywordList().getKeyword()) {
-			HashMap<String, String> q = new GoogleQuery(k.name, 10).query();
+			HashMap<String, String> q = new GoogleQuery(k.name, 100).query();
 			for (Entry<String, String> e : q.entrySet()) {
 				URL url;
 				try {
