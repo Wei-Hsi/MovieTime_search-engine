@@ -61,6 +61,7 @@ public class Fetch/* extends Thread */ {
 			retVal = retVal + line;
 		}
 		this.content = retVal;
+		this.conn.disconnect();
 //		System.out.println(this.content);
 	}
 

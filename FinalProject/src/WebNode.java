@@ -22,7 +22,7 @@ public class WebNode {
 	public void setNodeScore(ArrayList<Keyword> keywords) throws IOException {
 		System.out.println("setNodeScore");
 		this.nodeScore = 0;
-		webPage.setScore(keywords);
+		webPage.setScore(keywords); //Mutli Thread
 		nodeScore = webPage.score;
 		for (WebNode child : children) {
 			nodeScore += child.nodeScore;

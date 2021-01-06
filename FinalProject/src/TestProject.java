@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.URL;
 import java.security.cert.*;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -60,14 +61,31 @@ public class TestProject extends HttpServlet {
 			request.getRequestDispatcher("Search.jsp").forward(request, response);
 			return;
 		}
+
+//		try {
+//			System.out.println(new Fetch("https://www.google.com/search?q=%E5%AD%A4%E5%91%B3&oe=utf8&num=100").getContent());
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		HashMap<String, String> query = google.query();
+
+		DomainList domainList = new DomainList();
+
 		String[][] s = new String[query.size()][3];
 		request.setAttribute("query", s);
 		int num = 0;
 		for (Entry<String, String> entry : query.entrySet()) {
 			String title = entry.getKey();
 			String url = entry.getValue();
+
+			if (!domainList.getDomains().contains(new URL(url).getHost())) {
+//				System.out.println("continue");
+				continue;
+			}
+
 			s[num][0] = title;
 			s[num][1] = url;
 
@@ -75,23 +93,19 @@ public class TestProject extends HttpServlet {
 			WebTree tree = new WebTree(rootPage);
 
 			try {
-				rootPage.toFetch();
-//				rootPage.getFetch().start();
-//				try {
-//					rootPage.getFetch().join();
-//				} catch (InterruptedException e) {
-//					System.err.println("InterruptedException: " + e.getMessage());
-//				}
+				rootPage.toFetch(); // rootPage.getFetch().start(); // try {
+				// rootPage.getFetch().join(); // } catch (InterruptedException e) { //
+				// System.err.println("InterruptedException: " + e.getMessage()); // }
 				tree.root.toSubPage();
 			} catch (Exception e) {
-				System.err.println(e.getMessage());
-//				s[num][2] = String.valueOf(0.0);
-//				continue;
+				System.err.println(e.getMessage()); // s[num][2] = String.valueOf(0.0); //
+				continue;
 			}
 			tree.setPostOrderScore(new KeywordList().getKeyword());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
 
 //			s[num][2] = String.valueOf(Math.random() * 100);
+//			System.out.println(num + "," + s[num][0] + ", " + s[num][1] + ", " + s[num][2]);
 
 //		    nodeList.add(tree.root);
 //		    nodeList = new Ranking(nodeList).nodeList;
@@ -118,7 +132,7 @@ public class TestProject extends HttpServlet {
 		}
 		Ranking.rank(s);
 		for (int i = 0; i < s.length; i++) {
-			System.out.println(s[i][0] + "," + s[i][1] + "," + s[i][2]);
+			System.out.println(s[i][0] + ", " + s[i][1] + ", " + s[i][2]);
 		}
 		System.out.println("will show the result...");
 		request.getRequestDispatcher("googleitem.jsp").forward(request, response);
