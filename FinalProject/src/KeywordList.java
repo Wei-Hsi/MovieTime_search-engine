@@ -17,7 +17,7 @@ public class KeywordList {
 		lst.add(new Keyword("的", 0.001));
 	}
 
-	public ArrayList<Keyword> getKeyword() {
+	public ArrayList<Keyword> getList() {
 		return this.lst;
 	}
 }

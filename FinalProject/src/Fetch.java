@@ -115,7 +115,7 @@ public class Fetch/* extends Thread */ {
 
 	public Elements select(String tagQuery) {
 		/* Debug */
-		System.out.println("> " + this + ".select(" + tagQuery + ")");
+//		System.out.println("> " + this + ".select(" + tagQuery + ")");
 		/* Debug */
 		if (this.tagFinder == null) {
 			this.tagFinder = new TagFinder(this);

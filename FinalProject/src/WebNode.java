@@ -55,7 +55,7 @@ public class WebNode {
 		
 		
 		//debug
-//		double i = 0;
+		double i = 0;
 		//debug
 
 		
@@ -63,9 +63,9 @@ public class WebNode {
 			
 			
 			//debug
-//			if ((i = i + Math.random() * 10) > 100) {
-//				return;
-//			}
+			if (i > 5) {
+				return;
+			}
 			//debug
 
 			

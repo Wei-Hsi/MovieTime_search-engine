@@ -24,28 +24,29 @@ public class WebPage {
 //		this.fetch;
 	}
 
-	public boolean setScore(ArrayList<Keyword> keywords) {
+	public /* boolean */ void setScore(ArrayList<Keyword> keywords) {
 		/* Debug *///
 //		System.out.println("[" + this.getClass() + "] " + this + ".setScore(" + keywords + ")");
 		/* Debug */
 		score = 0;
 		if (this.fetch == null) {
 			try {
-				toFetch();
+				this.toFetch();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
+				this.fetch = new Fetch();
 //				e.printStackTrace();
-				return false;
+//				return false;
 			}
 		}
 		System.out.print("[" + this.getClass() + "] (" + this.name + ").setScore");
 //		System.out.println("[" + this.getClass() + "] for (Keyword k : " + keywords + ")");
 		for (Keyword k : keywords) {
 //			System.out.println("[" + this.getClass() + "] for (Keyword " + k + " : " + keywords + ")");
-			score += k.weight * getFetch().countKeyword(k); // 權重＊次數
+			score += k.weight * this.getFetch().countKeyword(k); // 權重＊次數
 		}
 		System.out.println(" " + score);
-		return true;
+//		return true;
 	}
 
 	@Override
