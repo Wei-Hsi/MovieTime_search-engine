@@ -111,6 +111,7 @@ public class TestProject extends HttpServlet {
 		for (int i = 0; i < s.length; i++) {
 			System.out.println(s[i][0] + ", " + s[i][1] + ", " + s[i][2]);
 		}
+//		test
 		System.out.println("will show the result...");
 		request.getRequestDispatcher("googleitem.jsp").forward(request, response);
 	}
