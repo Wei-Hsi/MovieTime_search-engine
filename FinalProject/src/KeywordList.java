@@ -14,7 +14,7 @@ public class KeywordList {
 		lst.add(new Keyword("2D", 10));
 		lst.add(new Keyword("3D", 10));
 		lst.add(new Keyword("現正熱映", 3));
-		lst.add(new Keyword("的", 0.001));
+		lst.add(new Keyword("維基百科", -100));
 	}
 
 	public ArrayList<Keyword> getList() {

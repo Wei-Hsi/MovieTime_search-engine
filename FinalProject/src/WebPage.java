@@ -29,6 +29,12 @@ public class WebPage {
 //		System.out.println("[" + this.getClass() + "] " + this + ".setScore(" + keywords + ")");
 		/* Debug */
 		score = 0;
+		
+		for (Keyword k : keywords) {
+//			System.out.println("[" + this.getClass() + "] for (Keyword " + k + " : " + keywords + ")");
+			score += k.weight * new WordCounter(this.name).countKeyword(k) * 100; // 權重＊次數
+		}
+		
 		if (this.fetch == null) {
 			try {
 				this.toFetch();

@@ -52,6 +52,8 @@ public class TestProject extends HttpServlet {
 		};
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
 		/* 繞開SSL驗證 */
+		
+		request.getSession().setMaxInactiveInterval(-1);
 
 		HttpSession session = request.getSession();
 		session.setMaxInactiveInterval(-1);
@@ -67,9 +69,6 @@ public class TestProject extends HttpServlet {
 			request.getRequestDispatcher("Search.jsp").forward(request, response);
 			return;
 		}
-
-//		System.out.println("request.getSession().invalidate();");
-//		request.getSession().invalidate();
 
 		GoogleQuery google = new GoogleQuery(request.getParameter("keyword"));
 		HashMap<String, String> query = google.query();
