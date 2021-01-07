@@ -1,26 +1,34 @@
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 public class DomainList {
 
 	private ArrayList<String> domains = new ArrayList<String>();
 
 	public DomainList() {
+
+		ArrayList<Thread> t = new ArrayList<Thread>();
+//		Thread[] t = new Thread[startNode.children.size()];
+		int i = 0;
+
 		for (Keyword k : new KeywordList().getList()) {
-			HashMap<String, String> q = new GoogleQuery(k.name, 20).query();
-			for (Entry<String, String> e : q.entrySet()) {
-				URL url;
-				try {
-					url = new URL(e.getValue());
-				} catch (MalformedURLException e1) {
-					continue;
-				}
-				domains.add(url.getHost());
+			if (i > 0) {
+				break;
 			}
+			DomainQuery thread = new DomainQuery(domains, k);
+			t.add(thread);
+			t.get(i).start();
+			i++;
+		}
+		for (int j = 0; j < t.size(); j++) {
+			try {
+				t.get(j).join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		for (int aa = 0; aa < t.size(); aa++) {
+			domains.addAll(((DomainQuery) t.get(aa)).getDomains());
 		}
 	}
 
