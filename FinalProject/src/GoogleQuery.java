@@ -21,7 +21,7 @@ public class GoogleQuery {
 	}
 
 	public GoogleQuery(String searchKeyword) {
-		this(searchKeyword, 200);
+		this(searchKeyword, 30);
 	}
 
 	public HashMap<String, String> query() {

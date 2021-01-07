@@ -6,6 +6,7 @@ public class WebPage {
 	public String name;
 	private Fetch fetch;
 	public double score;
+//	private boolean scored = false;
 
 	public WebPage(String url, String name) {
 		/* Debug */
@@ -23,11 +24,16 @@ public class WebPage {
 		this.fetch = new Fetch(this.url);
 //		this.fetch;
 	}
+	
+//	public boolean isScored() {
+//		return this.scored;
+//	}
 
 	public /* boolean */ void setScore(ArrayList<Keyword> keywords) {
 		/* Debug *///
 //		System.out.println("[" + this.getClass() + "] " + this + ".setScore(" + keywords + ")");
 		/* Debug */
+//		this.scored = true;
 		score = 0;
 		
 		for (Keyword k : keywords) {

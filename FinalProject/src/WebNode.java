@@ -5,33 +5,20 @@ import java.util.ArrayList;
 
 import org.jsoup.nodes.Element;
 
-public class WebNode {
+public class WebNode extends Thread {
 	public WebNode parent;
 	public ArrayList<WebNode> children;
 	public WebPage webPage;
 	public double nodeScore;
+	private boolean scored = false;
+	private ArrayList<Keyword> keywords;
 
 	public ArrayList<String> subLinks = new ArrayList<String>();
 
 	public WebNode(WebPage webPage) {
 		this.webPage = webPage;
 		this.children = new ArrayList<WebNode>();
-		this.nodeScore = -1;
-	}
-
-	public void setNodeScore(ArrayList<Keyword> keywords) throws IOException {
-		System.out.println("setNodeScore");
-		this.nodeScore = 0;
-		webPage.setScore(keywords); // Mutli Thread
-		nodeScore = webPage.score;
-		for (WebNode child : children) {
-			nodeScore += child.nodeScore;
-		}
-	}
-
-	public void addChild(WebNode child) {
-		this.children.add(child);
-		child.parent = this;
+//		this.nodeScore = -1;
 	}
 
 	public double getNodeScore() {
@@ -46,28 +33,31 @@ public class WebNode {
 		return webPage.url;
 	}
 
+	@Override
+	public String toString() {
+		return "WebNode[" + this.webPage.name + "]";
+	}
+
+	public boolean isScored() {
+		return this.scored;
+	}
+
 	public void toSubPage() throws Exception {
 		/* Debug */
-		System.out.println(">>$ [" + this.getClass() + "] " + this + ".toSubPage()\n");
+		System.out.println("[" + this.getClass() + "] " + this + ".toSubPage()\n"); // Debug
 		/* Debug */
-		webPage.toFetch();
-		System.out.print(webPage.getFetch());
-
-		// debug
-		double i = 0;
-		// debug
-
-		for (Element tag : webPage.getFetch().select("a")) {
-
-			// debug
-			if (i++ > 5) {
-				return;
-			}
-			// debug
-
-			String href = tag.attr("href"); // 有待整理
-//			System.out.println(href);
-//			System.out.println();
+		this.webPage.toFetch();
+//		System.out.print(this.webPage.getFetch());
+		/* Debug */
+		double i = 0; // Debug
+		/* Debug */
+		for (Element tag : this.webPage.getFetch().select("a")) {
+			/* Debug */
+			if (i++ > 5) { // Debug
+				return; // Debug
+			} // Debug
+			/* Debug */
+			String href = tag.attr("href");
 			if (subLinks.contains(href)) {
 				continue;
 			}
@@ -83,8 +73,6 @@ public class WebNode {
 	}
 
 	public static String urlHandler(String mainURL, String subURL) {
-//		System.out.println(mainURL);
-//		System.out.println(subURL);
 		URL url;
 		try {
 			url = new URL(subURL);
@@ -120,17 +108,38 @@ public class WebNode {
 					path = path.replace(path.substring(path.lastIndexOf("/")), "") + subURL.substring(1);
 				}
 			} else {
-//				host = "";
 				path = "/" + subURL;
 			}
 			urlString = host + path;
 			return urlString;
-
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "WebPage[" + this.webPage.name + "]";
+	public void addChild(WebNode child) {
+		this.children.add(child);
+		child.parent = this;
+	}
+
+	public void setNodeScore(ArrayList<Keyword> keywords) throws IOException {
+		System.out.println(this + ".setNodeScore");
+		this.scored = true;
+		this.nodeScore = 0;
+		webPage.setScore(keywords); // Mutli Thread
+		nodeScore = webPage.score;
+		for (WebNode child : children) {
+			nodeScore += child.nodeScore;
+		}
+	}
+
+	public void setKeywords(ArrayList<Keyword> keywords) {
+		this.keywords = keywords;
+	}
+
+	public void run() {
+		try {
+			setNodeScore(this.keywords);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

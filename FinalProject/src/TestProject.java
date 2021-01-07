@@ -52,7 +52,7 @@ public class TestProject extends HttpServlet {
 		};
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
 		/* 繞開SSL驗證 */
-		
+
 		request.getSession().setMaxInactiveInterval(-1);
 
 		HttpSession session = request.getSession();
@@ -78,7 +78,18 @@ public class TestProject extends HttpServlet {
 		String[][] s = new String[query.size()][3];
 		request.setAttribute("query", s);
 		int num = 0;
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		for (Entry<String, String> entry : query.entrySet()) {
+			// Mutli Thread
 			String title = entry.getKey();
 			String url = entry.getValue();
 
@@ -91,26 +102,40 @@ public class TestProject extends HttpServlet {
 				continue;
 			}
 
-			WebPage rootPage = new WebPage(url, title);
-			WebTree tree = new WebTree(rootPage);
+			WebTree tree = new WebTree(new WebPage(url, title));
 
 			try {
-//				rootPage.toFetch();
+//				tree.root.webPage.toFetch();
 				tree.root.toSubPage();
 			} catch (Exception e) {
 				System.err.println(e.getMessage());
-//				s[num][2] = String.valueOf(0.0);
-//				continue;
 			}
+
 			tree.setPostOrderScore(keywordList.getList());
 			s[num][2] = String.valueOf(tree.root.nodeScore);
 //			s[num][2] = String.valueOf(Math.random() * 100);
+			// Mutli Thread
 			num++;
 		}
+
+		// ***join***
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Rank
 		Ranking.rank(s);
 		for (int i = 0; i < s.length; i++) {
 			System.out.println(s[i][0] + ", " + s[i][1] + ", " + s[i][2]);
 		}
+//		test
 		System.out.println("will show the result...");
 		request.getRequestDispatcher("googleitem.jsp").forward(request, response);
 	}
